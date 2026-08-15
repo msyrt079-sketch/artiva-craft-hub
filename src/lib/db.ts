@@ -1,8 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase as typedSupabase } from "@/integrations/supabase/client";
 
-export type Row = Record<string, any>;
+const supabase = typedSupabase as any;
+
+// Rows are loosely typed on purpose: the app renders dynamic, table-driven forms.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type Row = any;
 
 export type TableName =
   | "customers"
