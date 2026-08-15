@@ -21,15 +21,15 @@ export function CrudPage({
 }: {
   table: TableName;
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   fields: Field[];
   addLabel: string;
   searchKeys?: string[];
   renderItem: (row: Row) => ReactNode;
   emptyText?: string;
-  banner?: (rows: Row[]) => ReactNode;
-  extra?: (values: Row) => ReactNode;
-  transform?: (values: Row) => Row;
+  banner?: ((rows: Row[]) => ReactNode) | undefined;
+  extra?: ((values: Row) => ReactNode) | undefined;
+  transform?: ((values: Row) => Row) | undefined;
 }) {
   const { data: rows = [], isLoading } = useRows(table);
   const save = useSaveRow(table);

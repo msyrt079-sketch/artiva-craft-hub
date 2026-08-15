@@ -27,10 +27,10 @@ export type Field = {
   label: string;
   type?: "text" | "number" | "date" | "textarea" | "select";
   options?: readonly string[] | FieldOption[];
-  placeholder?: string;
-  required?: boolean;
-  full?: boolean;
-  help?: string;
+  placeholder?: string | undefined;
+  required?: boolean | undefined;
+  full?: boolean | undefined;
+  help?: string | undefined;
 };
 
 function normalizeOptions(options: Field["options"]): FieldOption[] {
@@ -54,12 +54,12 @@ export function RecordDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
   title: string;
-  description?: string;
+  description?: string | undefined;
   fields: Field[];
-  initial?: Row;
+  initial?: Row | undefined;
   onSubmit: (values: Row) => void | Promise<void>;
-  extra?: (values: Row) => ReactNode;
-  saving?: boolean;
+  extra?: ((values: Row) => ReactNode) | undefined;
+  saving?: boolean | undefined;
 }) {
   const [values, setValues] = useState<Row>({});
 
