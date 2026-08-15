@@ -18,6 +18,7 @@ export function CrudPage({
   banner,
   extra,
   transform,
+  afterSave,
 }: {
   table: TableName;
   title: string;
@@ -30,6 +31,7 @@ export function CrudPage({
   banner?: ((rows: Row[]) => ReactNode) | undefined;
   extra?: ((values: Row) => ReactNode) | undefined;
   transform?: ((values: Row) => Row) | undefined;
+  afterSave?: ((id: string, values: Row, isNew: boolean) => Promise<void> | void) | undefined;
 }) {
   const { data: rows = [], isLoading } = useRows(table);
   const save = useSaveRow(table);
@@ -118,7 +120,9 @@ export function CrudPage({
         extra={extra}
         saving={save.isPending}
         onSubmit={async (values) => {
-          await save.mutateAsync(transform ? transform(values) : values);
+          const isNew = !values.id;
+          const id = await save.mutateAsync(transform ? transform(values) : values);
+          await afterSave?.(id, values, isNew);
           setOpen(false);
         }}
       />
