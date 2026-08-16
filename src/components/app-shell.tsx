@@ -19,7 +19,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
-import logoAsset from "@/assets/artiva-logo.jpg.asset.json";
+import logoUrl from "@/assets/artiva-logo.jpg";
 
 export const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -108,7 +108,7 @@ function Brand() {
   return (
     <Link to="/dashboard" className="flex items-center gap-2">
       <img
-        src={logoAsset.url}
+        src={logoUrl}
         alt="Artiva logo"
         className="size-9 rounded-xl object-cover"
       />
