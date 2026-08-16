@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import logoAsset from "@/assets/artiva-logo.jpg.asset.json";
+import logoUrl from "@/assets/artiva-logo.jpg";
 
 const STUDIO_EMAIL = "studio@artiva.app";
 
@@ -65,7 +65,7 @@ function AuthPage() {
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <img
-            src={logoAsset.url}
+            src={logoUrl}
             alt="Artiva — handmade studio logo"
             className="mx-auto w-56 rounded-3xl shadow-sm"
           />
