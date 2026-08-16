@@ -63,11 +63,14 @@ function AuthPage() {
     <div className="grid min-h-screen place-items-center bg-secondary/40 px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-primary font-display text-2xl font-bold text-primary-foreground">
-            A
-          </span>
-          <h1 className="mt-3 font-display text-2xl font-semibold">ARTIVA BUSINESS</h1>
-          <p className="text-sm text-muted-foreground">Your handmade business, beautifully managed.</p>
+          <img
+            src={logoAsset.url}
+            alt="Artiva — handmade studio logo"
+            className="mx-auto w-56 rounded-3xl shadow-sm"
+          />
+          <p className="mt-3 text-sm text-muted-foreground">
+            Your handmade business, beautifully managed.
+          </p>
         </div>
 
         <div className="card-soft space-y-3 p-5">

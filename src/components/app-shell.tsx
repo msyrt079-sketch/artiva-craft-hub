@@ -19,6 +19,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
+import logoAsset from "@/assets/artiva-logo.jpg.asset.json";
 
 export const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -106,9 +107,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 function Brand() {
   return (
     <Link to="/dashboard" className="flex items-center gap-2">
-      <span className="grid size-9 place-items-center rounded-xl bg-primary font-display text-lg font-bold text-primary-foreground">
-        A
-      </span>
+      <img
+        src={logoAsset.url}
+        alt="Artiva logo"
+        className="size-9 rounded-xl object-cover"
+      />
       <span className="leading-tight">
         <span className="block font-display text-base font-semibold">ARTIVA</span>
         <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
