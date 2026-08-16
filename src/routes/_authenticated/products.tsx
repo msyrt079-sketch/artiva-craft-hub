@@ -48,7 +48,7 @@ function RecipeDialog({ product, onClose }: { product: Row; onClose: () => void 
   const recipe = lines.filter((l: Row) => l.product_id === product.id);
   const total = recipe.reduce((s: number, l: Row) => s + num(l.cost), 0);
 
-  async function addLine() {
+  async function addLine(): Promise<void> {
     const material = materials.find((m: Row) => m.id === materialId);
     if (!material) return;
     const { data: user } = await supabase.auth.getUser();
@@ -62,18 +62,24 @@ function RecipeDialog({ product, onClose }: { product: Row; onClose: () => void 
       quantity,
       cost: quantity * num(material.purchase_price),
     });
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     setMaterialId("");
     setQty("1");
     qc.invalidateQueries();
   }
 
-  async function applyCost() {
+  async function applyCost(): Promise<void> {
     const { error } = await supabase
       .from("products")
       .update({ production_cost: total })
       .eq("id", product.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     qc.invalidateQueries();
     toast.success("Production cost updated");
   }
