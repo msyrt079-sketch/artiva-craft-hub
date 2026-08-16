@@ -13,7 +13,7 @@ import {
   type Row,
 } from "@/lib/db";
 import { materialFields } from "@/lib/fields";
-import { lowStock } from "@/lib/insights";
+import { lowStockMaterials } from "@/lib/insights";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -79,7 +79,7 @@ function MaterialsPage() {
       searchKeys={["name", "category", "unit"]}
       emptyText="No materials yet."
       banner={(rows: Row[]) => {
-        const low = lowStock(rows);
+        const low = lowStockMaterials(rows);
         if (low.length === 0) return null;
         return (
           <div className="rounded-2xl border border-warning/50 bg-warning/15 p-4">
