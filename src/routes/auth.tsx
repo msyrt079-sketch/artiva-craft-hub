@@ -5,16 +5,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const STUDIO_EMAIL = "studio@artiva.app";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
       { title: "Sign in — Artiva Business" },
-      { name: "description", content: "Secure admin login for the Artiva Business manager." },
+      { name: "description", content: "Enter the studio password to open Artiva Business." },
       { property: "og:title", content: "Sign in — Artiva Business" },
-      { property: "og:description", content: "Secure admin login for the Artiva Business manager." },
+      { property: "og:description", content: "Enter the studio password to open Artiva Business." },
     ],
   }),
   component: AuthPage,
@@ -22,7 +23,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -32,23 +32,26 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  const handle = async (mode: "in" | "up") => {
+  const enter = async () => {
     setLoading(true);
     try {
-      if (mode === "in") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        void navigate({ to: "/dashboard" });
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
+      const { error } = await supabase.auth.signInWithPassword({
+        email: STUDIO_EMAIL,
+        password,
+      });
+      if (error) {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: STUDIO_EMAIL,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
         });
-        if (error) throw error;
-        toast.success("Account created. You can sign in now.");
-        void navigate({ to: "/dashboard" });
+        if (signUpError) throw new Error("كلمة المرور غير صحيحة");
+        const { error: retry } = await supabase.auth.signInWithPassword({
+          email: STUDIO_EMAIL,
+          password,
+        });
+        if (retry) throw new Error("كلمة المرور غير صحيحة");
       }
+      void navigate({ to: "/dashboard" });
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -67,42 +70,26 @@ function AuthPage() {
           <p className="text-sm text-muted-foreground">Your handmade business, beautifully managed.</p>
         </div>
 
-        <div className="card-soft p-5">
-          <Tabs defaultValue="in">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="in">Sign in</TabsTrigger>
-              <TabsTrigger value="up">Create account</TabsTrigger>
-            </TabsList>
-            {(["in", "up"] as const).map((mode) => (
-              <TabsContent key={mode} value={mode} className="space-y-3 pt-4">
-                <div>
-                  <Label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Email
-                  </Label>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@artiva.com"
-                  />
-                </div>
-                <div>
-                  <Label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Password
-                  </Label>
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                  />
-                </div>
-                <Button className="w-full" disabled={loading} onClick={() => void handle(mode)}>
-                  {mode === "in" ? "Sign in" : "Create account"}
-                </Button>
-              </TabsContent>
-            ))}
-          </Tabs>
+        <div className="card-soft space-y-3 p-5">
+          <div>
+            <Label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Password
+            </Label>
+            <Input
+              type="password"
+              autoFocus
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void enter();
+              }}
+              placeholder="••••••••"
+            />
+          </div>
+          <Button className="w-full" disabled={loading || !password} onClick={() => void enter()}>
+            Enter
+          </Button>
         </div>
       </div>
     </div>
